@@ -1,0 +1,9 @@
+{
+  "@metadata": {
+    "authors": [
+      "Marijn van Wezel"
+    ]
+  },
+  "peganotify-extensionname": "PegaNotify",
+  "peganotify-desc": "Provides a custom notification mechanism for Pega."
+}

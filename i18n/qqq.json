@@ -1,0 +1,9 @@
+{
+  "@metadata": {
+    "authors": [
+      "Marijn van Wezel"
+    ]
+  },
+  "peganotify-extensionname": "{{notranslate}}\n\nName of the extension as it should be displayed.",
+  "peganotify-desc": "{{desc|name=PegaNotify|url=https://www.mediawiki.org/wiki/Extension:PegaNotify}}"
+}
