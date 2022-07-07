@@ -3,7 +3,6 @@
 namespace PegaNotify\Notifiers;
 
 use EchoEvent;
-use Title;
 use User;
 
 /**
@@ -25,22 +24,26 @@ interface Notifier {
     public static function getPresentationModel(): string;
 
     /**
-     * Returns for which pages notifications should be sent. The return value should be an array of pages, where the
-     * key can either be numeric or a string. If the key is numeric, the notification will be emitted unconditionally.
-     * If the key is a string, the notification will only be emitted if a notification with the same key (scoped to each
-     * notifier) has not already been emitted.
+     * Returns additional icons to define.
      *
-     * @return Title[]
+     * @return array
      */
-    public function getPages(): array;
+    public static function getIcons(): array;
 
     /**
-     * Returns the notification data for the given page used in the event that will be emitted by Echo.
+     * Returns an array of notifications that should be sent. A notification should have the following form:
      *
-     * @param Title $title The Title to get the notification data for
-     * @return array The notification data
+     * [
+     *     'id'    => (string) a unique identifier for this notification (will automatically be scoped to the notifier).
+     *                         The notification will only be emitted if a notification with this key has not already
+     *                         been emitted. If this value is omitted, the notification will be emitted
+     *                         unconditionally. (optional),
+     *     'data'  => (array)  additional data to add to the notification. (optional)
+     * ]
+     *
+     * @return array[]
      */
-    public function getNotificationData( Title $title ): array;
+    public static function getNotifications(): array;
 
     /**
      * Returns the users that should be notified by the given event.
@@ -48,5 +51,5 @@ interface Notifier {
      * @param EchoEvent $event The event to get the users for
      * @return User[] The user(s) to notify
      */
-    public function getNotificationUsers( EchoEvent $event ): array;
+    public static function getNotificationUsers( EchoEvent $event ): array;
 }

@@ -11,33 +11,11 @@ class NotifierStore {
     ];
 
     /**
-     * @var Notifier[] The instantiated notifiers
-     */
-    private array $instances;
-
-    /**
-     * @return array
-     */
-    public function getNotifiers(): array {
-        if ( !isset( $this->instances ) ) {
-            $this->instances = $this->constructNotifiers();
-        }
-
-        return $this->instances;
-    }
-
-    /**
-     * Eagerly constructs all notifiers and returns them.
+     * Returns the class names of the notifiers.
      *
-     * @return Notifier[] The constructed notifiers
+     * @return string[]|Notifier[]
      */
-    private function constructNotifiers(): array {
-        $notifiers = [];
-
-        foreach ( static::NOTIFIERS as $notifier ) {
-            $notifiers[] = new $notifier();
-        }
-
-        return $notifiers;
+    public function getNotifierClasses(): array {
+        return static::NOTIFIERS;
     }
 }

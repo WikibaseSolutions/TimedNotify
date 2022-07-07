@@ -44,10 +44,13 @@
   },
   "config": {
     "PegaNotifyRunRate": {
-      "value": 0.1
+      "value": 0.05
     },
     "PegaNotifyPushedNotificationRetentionDays": {
       "value": 60
+    },
+    "PegaNotifyRunDeferred": {
+      "value": true
     }
   },
   "manifest_version": 2,

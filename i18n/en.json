@@ -5,5 +5,9 @@
     ]
   },
   "peganotify-extensionname": "PegaNotify",
-  "peganotify-desc": "Provides a custom notification mechanism for Pega."
+  "peganotify-desc": "Provides a custom notification mechanism for Pega.",
+  "peganotify-expiring-soon-remaining-days": "$1 {{PLURAL:$1|day|days}}",
+  "peganotify-notification-header-expiring-soon": "The verified status of <strong>[[$1]]</strong> is scheduled to expire in '''$2'''. You have been identified as the owner of this page. Please visit the page and re-verify it soon.",
+  "peganotify-notification-subject-expiring-soon": "The verified status of <strong>[[$1]]</strong> on {{SITENAME}} is scheduled to expire in '''$2'''. You have been identified as the owner of this page. Please visit the page and re-verify it soon.",
+  "peganotify-notification-link-text-expiring-soon": "Show page"
 }

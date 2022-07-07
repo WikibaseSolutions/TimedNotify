@@ -16,41 +16,32 @@ class EchoHooks {
      *
      * @return void
      */
-    public static function onBeforeCreateEchoEvent( array &$notifications ): void {
-        foreach ( static::getNotifiers() as $notifier ) {
-            $notifications[$notifier->getName()] = static::createDefinition( $notifier );
+    public static function onBeforeCreateEchoEvent(
+        array &$notifications,
+        array &$notificationCategories,
+        array &$icons
+    ): void {
+        foreach ( PegaNotifyServices::getNotifierStore()->getNotifierClasses() as $notifierClass ) {
+            $notifications[$notifierClass::getName()] = static::createDefinition( $notifierClass );
+            $icons = array_merge($icons, $notifierClass::getIcons());
         }
-    }
-
-    /**
-     * Returns the notifiers to register.
-     *
-     * @return Notifier[]
-     */
-    private static function getNotifiers(): array {
-        // FIXME: Use DI whenever Echo is updated to use the new hook system
-        return PegaNotifyServices::getNotifierStore()->getNotifiers();
     }
 
     /**
      * Creates a notification definition for the given notifier.
      *
-     * @param Notifier $notifier
+     * @param string|Notifier $notifierClass The notifier class to get the definition for
      * @return array
      */
-    private static function createDefinition(Notifier $notifier ): array {
+    private static function createDefinition( string $notifierClass ): array {
         $definition = [
             'category' => 'system',
             'section' => 'alert',
-            'group' => 'negative',
-            'bundle' => [
-                'web' => true,
-                'expandable' => true,
-            ]
+            'group' => 'negative'
         ];
 
-        $definition['presentation-model'] = $notifier->getPresentationModel();
-        $definition['user-locators'] = [$notifier, 'getNotificationUsers'];
+        $definition['presentation-model'] = $notifierClass::getPresentationModel();
+        $definition['user-locators'] = [$notifierClass . '::getNotificationUsers'];
 
         return $definition;
     }
