@@ -19,6 +19,12 @@ Calculating which notifications to send out and to whom is expensive. The
 notifications are therefore only calculated approximately once every
 `1/$wgPegaNotifyRunRate` requests. Thus, if you set your run rate to `0.01`,
 the *probability* of running the notifications is 1 in 100 for every request.
+Setting this to a lower number will increase performance, as the notifications
+have to be calculated less often, but it will decrease the timeliness of the
+notifications. That is, notifications may arrive later than expected. It is
+recommended to keep this value between `0.01` (`1/100`) and `0.5` (`1/2`),
+depending on the size of your wiki. For smaller wiki's, this value should be
+greater than for large wiki's.
 
 It should be a number between `0` and `1`. The default value is `0.05` (`1/20`).
 
