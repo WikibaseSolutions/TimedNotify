@@ -107,7 +107,7 @@ abstract class ExpiringSoonNotifier extends Notifier {
                     // Build a unique ID, for example "562-1657756800-14d"
                     'id' => sprintf(
                         "%s-%s-%sd",
-                        $pageTitle->getId(),
+                        $pageTitle->getArticleID(),
                         $verifiedUntilTimestamp,
                         $maxDaysBeforeExpiration
                     ),
