@@ -154,8 +154,16 @@ abstract class ExpiringSoonNotifier extends Notifier {
         self::$pageOwnersCache[$pageTitle] = [];
 
         foreach ( $propertyValues as $value ) {
+            if ( is_array( $value ) && isset( $value['fulltext'] ) ) {
+                $pageOwner = $value['fulltext'];
+            } elseif ( is_string( $value ) ) {
+                $pageOwner = $value;
+            } else {
+                continue;
+            }
+
             // The page owner is a page (that should be in the User namespace)
-            $pageOwnerTitle = Title::newFromText( $value['fulltext'] );
+            $pageOwnerTitle = Title::newFromText( $pageOwner );
 
             if ( !$pageOwnerTitle->inNamespace( NS_USER ) ) {
                 continue;
