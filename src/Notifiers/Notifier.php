@@ -8,27 +8,27 @@ use User;
 /**
  * This interface is implemented by all periodic page notifiers.
  */
-interface Notifier {
+abstract class Notifier {
     /**
      * Returns the name of this notification.
      *
      * @return string
      */
-    public static function getName(): string;
+    abstract public function getName(): string;
 
     /**
      * Returns the class name of the presentation model.
      *
      * @return string
      */
-    public static function getPresentationModel(): string;
+    abstract public function getPresentationModel(): string;
 
     /**
      * Returns additional icons to define.
      *
      * @return array
      */
-    public static function getIcons(): array;
+    abstract public function getIcons(): array;
 
     /**
      * Returns an array of notifications that should be sent. A notification should have the following form:
@@ -43,7 +43,7 @@ interface Notifier {
      *
      * @return array[]
      */
-    public static function getNotifications(): array;
+    abstract public function getNotifications(): array;
 
     /**
      * Returns the users that should be notified by the given event.
@@ -51,5 +51,15 @@ interface Notifier {
      * @param EchoEvent $event The event to get the users for
      * @return User[] The user(s) to notify
      */
-    public static function getNotificationUsers( EchoEvent $event ): array;
+    abstract public static function getNotificationUsers( EchoEvent $event ): array;
+
+    /**
+     * Returns the list of users that should NOT be notified by this event.
+     *
+     * @param EchoEvent $event The event to get the filtered users for
+     * @return User[] The user(s) not to notify
+     */
+    public static function getFilteredUsers( EchoEvent $event ): array {
+        return [];
+    }
 }

@@ -1,0 +1,36 @@
+<?php
+
+namespace PegaNotify\Tests\Integration;
+
+use ExtensionRegistry;
+use MediaWiki\MediaWikiServices;
+use MediaWikiIntegrationTestCase;
+
+/**
+ * @coversNothing
+ */
+class ServiceWiringTest extends MediaWikiIntegrationTestCase {
+    /**
+     * @doesNotPerformAssertions
+     */
+    public function testServicesDoNotFatal() {
+        $services = $this->getServicesNames();
+
+        foreach ( $services as $service ) {
+            MediaWikiServices::getInstance()->getService( $service );
+        }
+    }
+
+    /**
+     * Returns the names of all WikiGuard services.
+     *
+     * @return array
+     */
+    private function getServicesNames(): array {
+        $allThings = ExtensionRegistry::getInstance()->getAllThings();
+        $dirName = dirname( $allThings['PegaNotify']['path'] );
+
+        return array_keys( require $dirName . '/PegaNotify.wiring.php' );
+    }
+
+}

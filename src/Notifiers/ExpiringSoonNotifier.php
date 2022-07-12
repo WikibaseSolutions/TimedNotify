@@ -2,17 +2,15 @@
 
 namespace PegaNotify\Notifiers;
 
-use EchoEvent;
 use ExtensionRegistry;
 use MWTimestamp;
-use PegaNotify\PresentationModels\ExpiringSoonPresentationModel;
 use SMW\Query\PrintRequest;
 use SMW\Query\QueryContext;
-use SMW\Query\QueryResult;
 use SMW\StoreFactory;
 use SMWQuery;
 use SMWQueryProcessor;
 use Title;
+use User;
 use Wikimedia\Timestamp\TimestampException;
 
 /**
@@ -25,34 +23,33 @@ use Wikimedia\Timestamp\TimestampException;
  *
  * @see https://pegadigitalit.atlassian.net/browse/KHUB-981
  */
-class ExpiringSoonNotifier implements Notifier {
-    public const NOTIFICATION_NAME = "PegaNotifyExpiringSoon";
+abstract class ExpiringSoonNotifier extends Notifier {
+    // The key used for the "time remaining" data item
     public const TIME_REMAINING_EXTRA_KEY = "time-remaining";
 
     // The name of the property that contains the date until which a page is verified
     private const VERIFIED_UNTIL_PROPERTY_KEY = "Verification lifespan date";
 
+    // The name of the property that contains the owner of the page
+    private const PAGE_OWNER_PROPERTY_KEY = "Page owner";
+
     // The times at which to notify a user (in days)
     private const NOTIFY_BEFORE_EXPIRATION_DAYS = [14, 7, 1];
 
     /**
-     * @inheritDoc
+     * @var array[] Cache of computed notifications
      */
-    public static function getName(): string {
-        return static::NOTIFICATION_NAME;
-    }
+    private static array $notificationsCache;
+
+    /**
+     * @var <string, User[]>[] Cache of page owners
+     */
+    private static array $pageOwnersCache = [];
 
     /**
      * @inheritDoc
      */
-    public static function getPresentationModel(): string {
-        return ExpiringSoonPresentationModel::class;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function getIcons(): array {
+    public function getIcons(): array {
         return [
             'peganotify-expiring-soon' => [
                 'path' => 'PegaNotify/modules/icons/expiring-soon.svg'
@@ -64,29 +61,33 @@ class ExpiringSoonNotifier implements Notifier {
      * @inheritDoc
      * @throws TimestampException
      */
-    public static function getNotifications(): array {
+    public function getNotifications(): array {
         if ( !ExtensionRegistry::getInstance()->isLoaded( 'SemanticMediaWiki' ) ) {
             // Make sure SemanticMediaWiki is installed and enabled
             return [];
         }
 
-        $notifications = [];
+        if ( isset( self::$notificationsCache ) ) {
+            return self::$notificationsCache;
+        }
 
-        foreach ( static::NOTIFY_BEFORE_EXPIRATION_DAYS as $id => $maxDaysBeforeExpiration ) {
+        self::$notificationsCache = [];
+
+        foreach ( self::NOTIFY_BEFORE_EXPIRATION_DAYS as $id => $maxDaysBeforeExpiration ) {
             // We want to build a query that returns all pages between "max days", and the next "max days". So, if the
             // NOTIFY_BEFORE_EXPIRATION_DAYS array has items [14, 7, 1], we build queries for the following date spans:
             //
             // - 14 days before until 7 days before
             // - 7 days before until 1 day before
             // - 1 day before until 0 days before
-            $minDaysBeforeExpiration = static::NOTIFY_BEFORE_EXPIRATION_DAYS[$id + 1] ?? 0;
+            $minDaysBeforeExpiration = self::NOTIFY_BEFORE_EXPIRATION_DAYS[$id + 1] ?? 0;
             $smwQuery = self::buildSemanticQuery( $maxDaysBeforeExpiration, $minDaysBeforeExpiration );
             $resultSet = StoreFactory::getStore()->getQueryResult( $smwQuery )->serializeToArray();
 
             $results = $resultSet["results"] ?? [];
 
             foreach ( $results as $titleText => $result ) {
-                if ( !isset( $result["printouts"][static::VERIFIED_UNTIL_PROPERTY_KEY][0]["timestamp"] ) ) {
+                if ( !isset( $result["printouts"][self::VERIFIED_UNTIL_PROPERTY_KEY][0]["timestamp"] ) ) {
                     // Although the query should guarantee this property is set, we don't want to crash if it isn't
                     continue;
                 }
@@ -99,10 +100,10 @@ class ExpiringSoonNotifier implements Notifier {
                 }
 
                 // Get the timestamp (Unix) until which the page is verified
-                $verifiedUntilTimestamp = $result["printouts"][static::VERIFIED_UNTIL_PROPERTY_KEY][0]["timestamp"];
+                $verifiedUntilTimestamp = $result["printouts"][self::VERIFIED_UNTIL_PROPERTY_KEY][0]["timestamp"];
 
                 // Insert the notification
-                $notifications[] = [
+                self::$notificationsCache[] = [
                     // Build a unique ID, for example "562-1657756800-14d"
                     'id' => sprintf(
                         "%s-%s-%sd",
@@ -113,30 +114,63 @@ class ExpiringSoonNotifier implements Notifier {
                     'data' => [
                         'title' => $pageTitle,
                         'extra' => [
-                            static::TIME_REMAINING_EXTRA_KEY => $maxDaysBeforeExpiration
+                            self::TIME_REMAINING_EXTRA_KEY => $maxDaysBeforeExpiration
                         ]
                     ]
                 ];
             }
         }
 
-        return $notifications;
+        return self::$notificationsCache;
     }
 
     /**
-     * @inheritDoc
+     * Returns the page owners of the given Title.
+     *
+     * @param Title $title The title to get the page owner for
+     * @return User[]
      */
-    public static function getNotificationUsers( EchoEvent $event ): array {
+    protected static function getPageOwners( Title $title ): array {
         if ( !ExtensionRegistry::getInstance()->isLoaded( 'SemanticMediaWiki' ) ) {
             // Make sure SemanticMediaWiki is installed and enabled
             return [];
         }
 
-        // TODO
+        $pageTitle = $title->getFullText();
 
-        return [
-            \User::newFromName('Admin')
-        ];
+        if ( isset( self::$pageOwnersCache[$pageTitle] ) ) {
+            return self::$pageOwnersCache[$pageTitle];
+        }
+
+        $resultSet = StoreFactory::getStore()->getQueryResult( SMWQueryProcessor::createQuery(
+            sprintf( '[[%s]]', $pageTitle ),
+            SMWQueryProcessor::getProcessedParams( ['limit' => 5000] ),
+            QueryContext::DEFERRED_QUERY,
+            'table',
+            [PrintRequest::newFromText( self::PAGE_OWNER_PROPERTY_KEY )]
+        ) )->serializeToArray();
+
+        $propertyValues = $resultSet["results"][$pageTitle]['printouts'][self::PAGE_OWNER_PROPERTY_KEY] ?? [];
+        self::$pageOwnersCache[$pageTitle] = [];
+
+        foreach ( $propertyValues as $value ) {
+            // The page owner is a page (that should be in the User namespace)
+            $pageOwnerTitle = Title::newFromText( $value['fulltext'] );
+
+            if ( !$pageOwnerTitle->inNamespace( NS_USER ) ) {
+                continue;
+            }
+
+            $pageOwnerUser = User::newFromName( $pageOwnerTitle->getText() );
+
+            if ( $pageOwnerUser === null || $pageOwnerUser->isAnon() ) {
+                continue;
+            }
+
+            self::$pageOwnersCache[$pageTitle][] = $pageOwnerUser;
+        }
+
+        return self::$pageOwnersCache[$pageTitle];
     }
 
     /**
@@ -150,9 +184,9 @@ class ExpiringSoonNotifier implements Notifier {
      */
     private static function buildSemanticQuery( int $maxDaysBeforeExpiration, int $minDaysBeforeExpiration ): SMWQuery {
         $queryString = sprintf(
-            '[[' . static::VERIFIED_UNTIL_PROPERTY_KEY . '::>=%s]] [[' . static::VERIFIED_UNTIL_PROPERTY_KEY . '::<<%s]]',
-            static::getDaysFromNow( $minDaysBeforeExpiration ),
-            static::getDaysFromNow( $maxDaysBeforeExpiration )
+            '[[' . self::VERIFIED_UNTIL_PROPERTY_KEY . '::>=%s]] [[' . self::VERIFIED_UNTIL_PROPERTY_KEY . '::<<%s]]',
+            self::getDaysFromNow( $minDaysBeforeExpiration ),
+            self::getDaysFromNow( $maxDaysBeforeExpiration )
         );
 
         return SMWQueryProcessor::createQuery(
@@ -161,7 +195,7 @@ class ExpiringSoonNotifier implements Notifier {
             SMWQueryProcessor::getProcessedParams( ['limit' => 5000] ),
             QueryContext::DEFERRED_QUERY,
             'table',
-            [PrintRequest::newFromText( static::VERIFIED_UNTIL_PROPERTY_KEY )]
+            [PrintRequest::newFromText( self::VERIFIED_UNTIL_PROPERTY_KEY )]
         );
     }
 

@@ -5,7 +5,6 @@ namespace PegaNotify;
 use DeferredUpdates;
 use EchoEvent;
 use MWException;
-use PegaNotify\Notifiers\Notifier;
 
 /**
  * This class is responsible for running notifications.
@@ -22,23 +21,31 @@ class NotificationRunner {
     private PushedNotificationBucket $pushedNotificationBucket;
 
     /**
-     * @var float The run rate, as configured through $wgPegaNotifyRunRate (between 0 and 1, inclusive)
+     * @var EchoEventCreator Class used for creating events
+     */
+    private EchoEventCreator $echoEventCreator;
+
+    /**
+     * @var float The run rate, as configured through $wgPegaNotifyRunRate
      */
     private float $runRate;
 
     /**
      * @param NotifierStore $notifierStore The notifier store to use
-     * @param float $runRate The run rate, as configured through $wgPegaNotifyRunRate (will be limited to 1)
+     * @param PushedNotificationBucket $pushedNotificationBucket The pushed notification bucket
+     * @param EchoEventCreator $echoEventCreator Class used for creating events
+     * @param float $runRate The run rate, as configured through $wgPegaNotifyRunRate
      */
     public function __construct(
         NotifierStore $notifierStore,
         PushedNotificationBucket $pushedNotificationBucket,
-        float $runRate = 1.0
+        EchoEventCreator $echoEventCreator,
+        float $runRate
     ) {
         $this->notifierStore = $notifierStore;
         $this->pushedNotificationBucket = $pushedNotificationBucket;
-
-        $this->runRate = min( 1, $runRate );
+        $this->echoEventCreator = $echoEventCreator;
+        $this->runRate = $runRate;
     }
 
     /**
@@ -48,9 +55,11 @@ class NotificationRunner {
      * @throws MWException
      */
     public function run(): void {
-        foreach ( $this->notifierStore->getNotifierClasses() as $notifierClass ) {
-            foreach ($notifierClass::getNotifications() as $notification ) {
-                $notificationId = $notification['id'] ?? null;
+        foreach ( $this->notifierStore->getNotifiers() as $notifier ) {
+            foreach ( $notifier->getNotifications() as $notification ) {
+                $notificationId = isset( $notification['id'] ) ?
+                    sprintf( '%s-%s', $notifier->getName(), $notification['id']) :
+                    null;
 
                 if ( $notificationId !== null && $this->pushedNotificationBucket->isPushed( $notificationId ) ) {
                     // If the notification has already been pushed to Echo, we skip it
@@ -58,10 +67,10 @@ class NotificationRunner {
                 }
 
                 $data = $notification['data'] ?? [];
-                $data['type'] = $notifierClass::getName();
+                $data['type'] = $notifier->getName();
 
                 // Create and send the notification
-                EchoEvent::create( $data );
+                $this->echoEventCreator->create( $data );
 
                 if ( $notificationId !== null ) {
                     // Make sure we don't push the notification twice by storing that we have sent it
@@ -86,7 +95,7 @@ class NotificationRunner {
     }
 
     /**
-     * Run the notifications opportunistically (and optionally deferred).
+     * Run the notifications occasionally (and optionally deferred).
      *
      * To prevent slowness and unnecessary overhead, notifications are only run sometimes. This function may therefore
      * do nothing when called, or it may on occasion run the notifications. How often this function actually runs the
@@ -106,12 +115,11 @@ class NotificationRunner {
      * @see NotificationRunner::run() for a function that always immediately runs the notifications
      * @see NotificationRunner::runDeferred() for a function that always runs the notifications in a deferred request
      */
-    public function runOpportunistic( bool $deferred = true ): void {
+    public function runOccasionally( bool $deferred = true ): void {
         // Generate a random value between 0 and 1 inclusive
         $rand = lcg_value();
 
         if ( $rand <= $this->runRate ) {
-            // Bingo! Run the notifications
             $deferred ? $this->runDeferred() : $this->run();
         }
     }

@@ -13,7 +13,8 @@ class EchoHooks {
      * Called when the events for Echo are retrieved and created.
      *
      * @param array $notifications
-     *
+     * @param array $notificationCategories
+     * @param array $icons
      * @return void
      */
     public static function onBeforeCreateEchoEvent(
@@ -21,27 +22,28 @@ class EchoHooks {
         array &$notificationCategories,
         array &$icons
     ): void {
-        foreach ( PegaNotifyServices::getNotifierStore()->getNotifierClasses() as $notifierClass ) {
-            $notifications[$notifierClass::getName()] = static::createDefinition( $notifierClass );
-            $icons = array_merge($icons, $notifierClass::getIcons());
+        foreach ( PegaNotifyServices::getNotifierStore()->getNotifiers() as $notifier ) {
+            $notifications[$notifier->getName()] = self::createDefinition( $notifier );
+            $icons = array_merge($icons, $notifier->getIcons());
         }
     }
 
     /**
      * Creates a notification definition for the given notifier.
      *
-     * @param string|Notifier $notifierClass The notifier class to get the definition for
+     * @param Notifier $notifier The notifier class to get the definition for
      * @return array
      */
-    private static function createDefinition( string $notifierClass ): array {
+    private static function createDefinition( Notifier $notifier ): array {
         $definition = [
             'category' => 'system',
             'section' => 'alert',
             'group' => 'negative'
         ];
 
-        $definition['presentation-model'] = $notifierClass::getPresentationModel();
-        $definition['user-locators'] = [$notifierClass . '::getNotificationUsers'];
+        $definition['presentation-model'] = $notifier->getPresentationModel();
+        $definition['user-locators'] = [get_class( $notifier ) . '::getNotificationUsers'];
+        $definition['user-filters'] = [get_class( $notifier ) . '::getFilteredUsers'];
 
         return $definition;
     }

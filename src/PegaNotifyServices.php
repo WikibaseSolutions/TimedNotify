@@ -21,11 +21,15 @@ final class PegaNotifyServices {
     private function __construct() {
     }
 
+    public static function getEchoEventCreator( ?ServiceContainer $services = null ): EchoEventCreator {
+        return self::getService( "EchoEventCreator", $services );
+    }
+
     public static function getNotificationRunner( ?ServiceContainer $services = null ): NotificationRunner {
         return self::getService( "NotificationRunner", $services );
     }
 
-    public static function getNotifierStore(?ServiceContainer $services = null ): NotifierStore {
+    public static function getNotifierStore( ?ServiceContainer $services = null ): NotifierStore {
         return self::getService( "NotifierStore", $services );
     }
 

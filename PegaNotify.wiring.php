@@ -8,16 +8,21 @@
  */
 
 use MediaWiki\MediaWikiServices;
+use PegaNotify\EchoEventCreator;
 use PegaNotify\NotificationRunner;
 use PegaNotify\NotifierStore;
 use PegaNotify\PegaNotifyServices;
 use PegaNotify\PushedNotificationBucket;
 
 return [
+    "PegaNotify.EchoEventCreator" => static function (): EchoEventCreator {
+        return new EchoEventCreator();
+    },
     "PegaNotify.NotificationRunner" => static function ( MediaWikiServices $services ): NotificationRunner {
         return new NotificationRunner(
             PegaNotifyServices::getNotifierStore(),
             PegaNotifyServices::getPushedNotificationBucket(),
+            PegaNotifyServices::getEchoEventCreator(),
             $services->getMainConfig()->get( 'PegaNotifyRunRate' )
         );
     },
