@@ -1,6 +1,6 @@
 <?php
 
-namespace PegaNotify\Tests\Integration;
+namespace TimedNotify\Tests\Integration;
 
 use ExtensionRegistry;
 use MediaWiki\MediaWikiServices;
@@ -28,9 +28,9 @@ class ServiceWiringTest extends MediaWikiIntegrationTestCase {
      */
     private function getServicesNames(): array {
         $allThings = ExtensionRegistry::getInstance()->getAllThings();
-        $dirName = dirname( $allThings['PegaNotify']['path'] );
+        $dirName = dirname( $allThings['TimedNotify']['path'] );
 
-        return array_keys( require $dirName . '/PegaNotify.wiring.php' );
+        return array_keys( require $dirName . '/TimedNotify.wiring.php' );
     }
 
 }

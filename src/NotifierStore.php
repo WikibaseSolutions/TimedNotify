@@ -1,21 +1,33 @@
 <?php
 
-namespace PegaNotify;
+namespace TimedNotify;
 
-use PegaNotify\Notifiers\ExpiringSoonHubAdminNotifier;
-use PegaNotify\Notifiers\ExpiringSoonPageOwnerNotifier;
-use PegaNotify\Notifiers\Notifier;
+use TimedNotify\Notifiers\ExpiringSoonHubAdminNotifier;
+use TimedNotify\Notifiers\ExpiringSoonPageOwnerNotifier;
+use TimedNotify\Notifiers\Notifier;
 
 class NotifierStore {
-    public const NOTIFIERS = [
+    private const NOTIFIERS = [
         ExpiringSoonHubAdminNotifier::class,
         ExpiringSoonPageOwnerNotifier::class
     ];
 
     /**
-     * @var Notifier[]
+     * @var string[] Array of notifiers names that are enabled
+     */
+    private array $enabledNotifiers;
+
+    /**
+     * @var Notifier[] Cache of instantiated notifiers
      */
     private array $notifierInstancesCache;
+
+    /**
+     * @param bool[] $enabledNotifiers Array of notifiers that are enabled
+     */
+    public function __construct( array $enabledNotifiers ) {
+        $this->enabledNotifiers = $enabledNotifiers;
+    }
 
     /**
      * Returns instances of notifiers.
@@ -29,19 +41,14 @@ class NotifierStore {
 
         $this->notifierInstancesCache = [];
 
-        foreach ( $this->getNotifierClasses() as $notifierClass ) {
-            $this->notifierInstancesCache[] = new $notifierClass();
+        foreach ( self::NOTIFIERS as $notifierClass ) {
+            $instance = new $notifierClass();
+
+            if ( isset( $this->enabledNotifiers[$instance->getName()] ) && $this->enabledNotifiers[$instance->getName()] === true ) {
+                $this->notifierInstancesCache[] = $instance;
+            }
         }
 
         return $this->notifierInstancesCache;
-    }
-
-    /**
-     * Returns the class names of the notifiers.
-     *
-     * @return string[]|Notifier[]
-     */
-    public function getNotifierClasses(): array {
-        return self::NOTIFIERS;
     }
 }

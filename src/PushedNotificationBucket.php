@@ -1,6 +1,6 @@
 <?php
 
-namespace PegaNotify;
+namespace TimedNotify;
 
 use IDatabase;
 
@@ -9,7 +9,7 @@ use IDatabase;
  * store which notifications have been pushed so that notifications are not pushed more than once.
  */
 class PushedNotificationBucket {
-    public const PUSHED_NOTIFICATIONS_TABLE = 'peganotify_pushed_notifications';
+    public const PUSHED_NOTIFICATIONS_TABLE = 'timednotify_pushed_notifications';
 
     /**
      * @var IDatabase The database connection

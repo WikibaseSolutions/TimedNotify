@@ -1,6 +1,6 @@
 <?php
 
-namespace PegaNotify\Notifiers;
+namespace TimedNotify\Notifiers;
 
 use ExtensionRegistry;
 use MWTimestamp;
@@ -51,8 +51,8 @@ abstract class ExpiringSoonNotifier extends Notifier {
      */
     public function getIcons(): array {
         return [
-            'peganotify-expiring-soon' => [
-                'path' => 'PegaNotify/modules/icons/expiring-soon.svg'
+            'timednotify-expiring-soon' => [
+                'path' => 'TimedNotify/modules/icons/expiring-soon.svg'
             ]
         ];
     }

@@ -1,22 +1,22 @@
 <?php
 
-namespace PegaNotify\Tests\Integration;
+namespace TimedNotify\Tests\Integration;
 
 use IDatabase;
 use MediaWikiIntegrationTestCase;
-use PegaNotify\PegaNotifyServices;
-use PegaNotify\PushedNotificationBucket;
+use TimedNotify\TimedNotifyServices;
+use TimedNotify\PushedNotificationBucket;
 
 /**
- * @covers \PegaNotify\PushedNotificationBucket
+ * @covers \TimedNotify\PushedNotificationBucket
  * @group Database
  */
 class PushedNotificationBucketTest extends MediaWikiIntegrationTestCase {
     private const RETENTION_TIME = 60;
 
     public function setUp(): void {
-        $this->setMwGlobals( ['PegaNotifyPushedNotificationRetentionDays' => self::RETENTION_TIME] );
-        $this->pushedNotificationBucket = PegaNotifyServices::getPushedNotificationBucket();
+        $this->setMwGlobals( ['TimedNotifyPushedNotificationRetentionDays' => self::RETENTION_TIME] );
+        $this->pushedNotificationBucket = TimedNotifyServices::getPushedNotificationBucket();
     }
 
     public function tearDown(): void {

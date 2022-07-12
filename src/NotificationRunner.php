@@ -1,6 +1,6 @@
 <?php
 
-namespace PegaNotify;
+namespace TimedNotify;
 
 use DeferredUpdates;
 use EchoEvent;
@@ -26,7 +26,7 @@ class NotificationRunner {
     private EchoEventCreator $echoEventCreator;
 
     /**
-     * @var float The run rate, as configured through $wgPegaNotifyRunRate
+     * @var float The run rate, as configured through $wgTimedNotifyRunRate
      */
     private float $runRate;
 
@@ -34,7 +34,7 @@ class NotificationRunner {
      * @param NotifierStore $notifierStore The notifier store to use
      * @param PushedNotificationBucket $pushedNotificationBucket The pushed notification bucket
      * @param EchoEventCreator $echoEventCreator Class used for creating events
-     * @param float $runRate The run rate, as configured through $wgPegaNotifyRunRate
+     * @param float $runRate The run rate, as configured through $wgTimedNotifyRunRate
      */
     public function __construct(
         NotifierStore $notifierStore,
@@ -99,7 +99,7 @@ class NotificationRunner {
      *
      * To prevent slowness and unnecessary overhead, notifications are only run sometimes. This function may therefore
      * do nothing when called, or it may on occasion run the notifications. How often this function actually runs the
-     * notifications is dependent on the value of $wgPegaNotifyRunRate.
+     * notifications is dependent on the value of $wgTimedNotifyRunRate.
      *
      * When the run rate is a number between 0 and 1, the notifications are run, on average, every 1/runRate times this
      * function is called. For example, if the run rate is 0.01, the notifications are run about every 100 times this

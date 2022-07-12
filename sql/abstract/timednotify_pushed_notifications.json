@@ -1,7 +1,7 @@
 [
   {
-    "name": "peganotify_pushed_notifications",
-    "description": "The \"peganotify_pushed_notifications\" table registers which notifications have already been pushed.",
+    "name": "timednotify_pushed_notifications",
+    "description": "The \"timednotify_pushed_notifications\" table registers which notifications have already been pushed.",
     "columns": [
       {
         "name": "pushed_notification_id",

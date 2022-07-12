@@ -1,6 +1,6 @@
 <?php
 
-namespace PegaNotify;
+namespace TimedNotify;
 
 use EchoEvent;
 use MWException;

@@ -1,6 +1,6 @@
 <?php
 
-namespace PegaNotify\MediaWiki\Hooks;
+namespace TimedNotify\MediaWiki\Hooks;
 
 use ExtensionRegistry;
 use MediaWiki\Installer\Hook\LoadExtensionSchemaUpdatesHook;
@@ -15,7 +15,7 @@ class DatabaseSchemaUpdater implements LoadExtensionSchemaUpdatesHook {
     public function onLoadExtensionSchemaUpdates( $updater ): void {
         // We MUST use the ExtensionRegistry singleton here, since the LoadExtensionSchemaUpdates hook
         // does not support service injections
-        $extensionDirectory = dirname( ExtensionRegistry::getInstance()->getAllThings()["PegaNotify"]["path"] );
+        $extensionDirectory = dirname( ExtensionRegistry::getInstance()->getAllThings()["TimedNotify"]["path"] );
         $sqlDirectory = sprintf( "%s/sql", $extensionDirectory );
         $sqlFiles = glob( $sqlDirectory . "/" . $updater->getDB()->getType() . "/*_table.sql" );
 

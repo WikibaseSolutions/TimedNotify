@@ -4,12 +4,12 @@
       "Marijn van Wezel"
     ]
   },
-  "peganotify-extensionname": "PegaNotify",
-  "peganotify-desc": "Provides a custom notification mechanism for Pega.",
-  "peganotify-expiring-soon-remaining-days": "$1 {{PLURAL:$1|day|days}}",
-  "peganotify-notification-header-expiring-soon-page-owner": "The verified status of <strong>[[$1]]</strong> is scheduled to expire in less than <strong>$2</strong>. You have been identified as the owner of this page. Please visit the page and re-verify it soon.",
-  "peganotify-notification-subject-expiring-soon-page-owner": "The verified status of <strong>[[$1]]</strong> on {{SITENAME}} is scheduled to expire in less than <strong>$2</strong>. You have been identified as the owner of this page. Please visit the page and re-verify it soon.",
-  "peganotify-notification-header-expiring-soon-hub-admin": "The verified status of <strong>[[$1]]</strong> is scheduled to expire in less than <strong>$2</strong>. This page is located in the <strong>[[$3:Home|$3]]</strong> hub that you administer. Please visit the page and have the page owner verify it soon.",
-  "peganotify-notification-subject-expiring-soon-hub-admin": "The verified status of <strong>[[$1]]</strong> on {{SITENAME}} is scheduled to expire in less than <strong>$2</strong>. This page is located in the <strong>[[$3:Home|$3]]</strong> hub that you administer. Please visit the page and have the page owner verify it soon.",
-  "peganotify-notification-link-text-expiring-soon": "Show page"
+  "timednotify-extensionname": "TimedNotify",
+  "timednotify-desc": "Provides a custom notification mechanism for Pega.",
+  "timednotify-expiring-soon-remaining-days": "$1 {{PLURAL:$1|day|days}}",
+  "timednotify-notification-header-expiring-soon-page-owner": "The verified status of <strong>[[$1]]</strong> is scheduled to expire in less than <strong>$2</strong>. You have been identified as the owner of this page. Please visit the page and re-verify it soon.",
+  "timednotify-notification-subject-expiring-soon-page-owner": "The verified status of <strong>[[$1]]</strong> on {{SITENAME}} is scheduled to expire in less than <strong>$2</strong>. You have been identified as the owner of this page. Please visit the page and re-verify it soon.",
+  "timednotify-notification-header-expiring-soon-hub-admin": "The verified status of <strong>[[$1]]</strong> is scheduled to expire in less than <strong>$2</strong>. This page is located in the <strong>[[$3:Home|$3]]</strong> hub that you administer. Please visit the page and have the page owner verify it soon.",
+  "timednotify-notification-subject-expiring-soon-hub-admin": "The verified status of <strong>[[$1]]</strong> on {{SITENAME}} is scheduled to expire in less than <strong>$2</strong>. This page is located in the <strong>[[$3:Home|$3]]</strong> hub that you administer. Please visit the page and have the page owner verify it soon.",
+  "timednotify-notification-link-text-expiring-soon": "Show page"
 }

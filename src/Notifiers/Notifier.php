@@ -1,6 +1,6 @@
 <?php
 
-namespace PegaNotify\Notifiers;
+namespace TimedNotify\Notifiers;
 
 use EchoEvent;
 use User;

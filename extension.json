@@ -1,13 +1,13 @@
 {
-  "name": "PegaNotify",
+  "name": "TimedNotify",
   "version": "1.0.0",
-  "namemsg": "peganotify-extensionname",
+  "namemsg": "timednotify-extensionname",
   "url": "https://wikibase-solutions.com",
   "type": "other",
   "author": [
     "[https://mediawiki.org/wiki/User:Xxmarijnw Marijn van Wezel] ([https://wikibase-solutions.com Wikibase Solutions])"
   ],
-  "descriptionmsg": "peganotify-desc",
+  "descriptionmsg": "timednotify-desc",
   "license-name": "GPL-2.0-or-later",
   "requires": {
     "MediaWiki": ">= 1.35.0",
@@ -16,41 +16,47 @@
     }
   },
   "MessagesDirs": {
-    "PegaNotify": [
+    "TimedNotify": [
       "i18n"
     ]
   },
   "AutoloadNamespaces": {
-    "PegaNotify\\": "src/"
+    "TimedNotify\\": "src/"
   },
   "ServiceWiringFiles": [
-    "PegaNotify.wiring.php"
+    "TimedNotify.wiring.php"
   ],
   "Hooks": {
-    "BeforeCreateEchoEvent": "PegaNotify\\MediaWiki\\Hooks\\EchoHooks::onBeforeCreateEchoEvent",
+    "BeforeCreateEchoEvent": "TimedNotify\\MediaWiki\\Hooks\\EchoHooks::onBeforeCreateEchoEvent",
     "BeforeInitialize": "BeforeInitializeNotificationRunner",
     "LoadExtensionSchemaUpdates": "DatabaseSchemaUpdater"
   },
   "HookHandlers": {
     "BeforeInitializeNotificationRunner": {
-      "class": "PegaNotify\\MediaWiki\\Hooks\\BeforeInitializeNotificationRunner",
+      "class": "TimedNotify\\MediaWiki\\Hooks\\BeforeInitializeNotificationRunner",
       "services": [
-        "PegaNotify.NotificationRunner"
+        "TimedNotify.NotificationRunner"
       ]
     },
     "DatabaseSchemaUpdater": {
-      "class": "PegaNotify\\MediaWiki\\Hooks\\DatabaseSchemaUpdater"
+      "class": "TimedNotify\\MediaWiki\\Hooks\\DatabaseSchemaUpdater"
     }
   },
   "config": {
-    "PegaNotifyRunRate": {
+    "TimedNotifyRunRate": {
       "value": 0.05
     },
-    "PegaNotifyPushedNotificationRetentionDays": {
+    "TimedNotifyPushedNotificationRetentionDays": {
       "value": 60
     },
-    "PegaNotifyRunDeferred": {
+    "TimedNotifyRunDeferred": {
       "value": true
+    },
+    "TimedNotifyEnabledNotifiers": {
+      "value": {
+        "TimedNotifyExpiringSoonHubAdmin": true,
+        "TimedNotifyExpiringSoonPageOwner": true
+      }
     }
   },
   "manifest_version": 2,

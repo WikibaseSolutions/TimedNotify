@@ -1,11 +1,11 @@
 <?php
 
-namespace PegaNotify\MediaWiki\Hooks;
+namespace TimedNotify\MediaWiki\Hooks;
 
 use MediaWiki\Hook\BeforeInitializeHook;
 use MediaWiki\MediaWikiServices;
 use MWException;
-use PegaNotify\NotificationRunner;
+use TimedNotify\NotificationRunner;
 
 /**
  * This class is responsible for running the notifications during the initialisation of the wiki.
@@ -29,7 +29,7 @@ class BeforeInitializeNotificationRunner implements BeforeInitializeHook {
      */
     public function onBeforeInitialize( $title, $unused, $output, $user, $request, $mediaWiki ): void {
         $this->notificationRunner->runOccasionally(
-            MediaWikiServices::getInstance()->getMainConfig()->get( 'PegaNotifyRunDeferred' )
+            MediaWikiServices::getInstance()->getMainConfig()->get( 'TimedNotifyRunDeferred' )
         );
     }
 }

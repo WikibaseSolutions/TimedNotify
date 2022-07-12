@@ -1,18 +1,18 @@
 <?php
 
-namespace PegaNotify\Tests\Integration;
+namespace TimedNotify\Tests\Integration;
 
 use IDatabase;
 use MediaWikiIntegrationTestCase;
-use PegaNotify\EchoEventCreator;
-use PegaNotify\NotificationRunner;
-use PegaNotify\Notifiers\Notifier;
-use PegaNotify\NotifierStore;
-use PegaNotify\PegaNotifyServices;
-use PegaNotify\PushedNotificationBucket;
+use TimedNotify\EchoEventCreator;
+use TimedNotify\NotificationRunner;
+use TimedNotify\Notifiers\Notifier;
+use TimedNotify\NotifierStore;
+use TimedNotify\TimedNotifyServices;
+use TimedNotify\PushedNotificationBucket;
 
 /**
- * @covers \PegaNotify\NotificationRunner
+ * @covers \TimedNotify\NotificationRunner
  */
 class NotificationRunnerTest extends MediaWikiIntegrationTestCase {
     public function tearDown(): void {
@@ -22,7 +22,7 @@ class NotificationRunnerTest extends MediaWikiIntegrationTestCase {
     public function testRunOccasionallyRunsOccasionally(): void {
         $numTries = 500;
 
-        $notifierStoreMock = $this->getMockBuilder(NotifierStore::class)->getMock();
+        $notifierStoreMock = $this->getMockBuilder(NotifierStore::class)->disableOriginalConstructor()->getMock();
 
         $notifierStoreMock->expects($this->atLeastOnce())->method('getNotifiers');
         $notifierStoreMock->expects($this->atMost($numTries - 1))->method('getNotifiers');
@@ -31,8 +31,8 @@ class NotificationRunnerTest extends MediaWikiIntegrationTestCase {
 
         $notificationRunner = new NotificationRunner(
             $notifierStoreMock,
-            PegaNotifyServices::getPushedNotificationBucket(),
-            PegaNotifyServices::getEchoEventCreator(),
+            TimedNotifyServices::getPushedNotificationBucket(),
+            TimedNotifyServices::getEchoEventCreator(),
             0.5
         );
 
@@ -44,15 +44,15 @@ class NotificationRunnerTest extends MediaWikiIntegrationTestCase {
     public function testRunOccasionallyRunsAlwaysWhenRunRateIsOne(): void {
         $numTries = 500;
 
-        $notifierStoreMock = $this->getMockBuilder(NotifierStore::class)->getMock();
+        $notifierStoreMock = $this->getMockBuilder(NotifierStore::class)->disableOriginalConstructor()->getMock();
         $notifierStoreMock->expects($this->exactly($numTries))->method('getNotifiers');
 
         $notifierStoreMock->method('getNotifiers')->willReturn([]);
 
         $notificationRunner = new NotificationRunner(
             $notifierStoreMock,
-            PegaNotifyServices::getPushedNotificationBucket(),
-            PegaNotifyServices::getEchoEventCreator(),
+            TimedNotifyServices::getPushedNotificationBucket(),
+            TimedNotifyServices::getEchoEventCreator(),
             1.0
         );
 
@@ -62,15 +62,15 @@ class NotificationRunnerTest extends MediaWikiIntegrationTestCase {
     }
 
     public function testRunOccasionallyRunsNeverWhenRunRateIsZero(): void {
-        $notifierStoreMock = $this->getMockBuilder(NotifierStore::class)->getMock();
+        $notifierStoreMock = $this->getMockBuilder(NotifierStore::class)->disableOriginalConstructor()->getMock();
         $notifierStoreMock->expects($this->never())->method('getNotifiers');
 
         $notifierStoreMock->method('getNotifiers')->willReturn([]);
 
         $notificationRunner = new NotificationRunner(
             $notifierStoreMock,
-            PegaNotifyServices::getPushedNotificationBucket(),
-            PegaNotifyServices::getEchoEventCreator(),
+            TimedNotifyServices::getPushedNotificationBucket(),
+            TimedNotifyServices::getEchoEventCreator(),
             0.0
         );
 
@@ -89,19 +89,19 @@ class NotificationRunnerTest extends MediaWikiIntegrationTestCase {
         ] );
         $notifierMock->method( 'getName' )->willReturn( 'TestingNotifier' );
 
-        $notifierStoreMock = $this->getMockBuilder( NotifierStore::class )->getMock();
+        $notifierStoreMock = $this->getMockBuilder( NotifierStore::class )->disableOriginalConstructor()->getMock();
         $notifierStoreMock->method( 'getNotifiers' )->willReturn( [
             $notifierMock
         ] );
 
-        $bucket = PegaNotifyServices::getPushedNotificationBucket();
+        $bucket = TimedNotifyServices::getPushedNotificationBucket();
 
         $this->assertFalse( $bucket->isPushed( 'TestingNotifier-testing' ) );
 
         $notificationRunner = new NotificationRunner(
             $notifierStoreMock,
             $bucket,
-            PegaNotifyServices::getEchoEventCreator(),
+            TimedNotifyServices::getEchoEventCreator(),
             1.0
         );
 
@@ -119,7 +119,7 @@ class NotificationRunnerTest extends MediaWikiIntegrationTestCase {
         ] );
         $notifierMock->method( 'getName' )->willReturn( 'TestingNotifier' );
 
-        $notifierStoreMock = $this->getMockBuilder( NotifierStore::class )->getMock();
+        $notifierStoreMock = $this->getMockBuilder( NotifierStore::class )->disableOriginalConstructor()->getMock();
         $notifierStoreMock->method( 'getNotifiers' )->willReturn( [
             $notifierMock
         ] );
@@ -130,7 +130,7 @@ class NotificationRunnerTest extends MediaWikiIntegrationTestCase {
         $notificationRunner = new NotificationRunner(
             $notifierStoreMock,
             $bucketMock,
-            PegaNotifyServices::getEchoEventCreator(),
+            TimedNotifyServices::getEchoEventCreator(),
             1.0
         );
 
@@ -142,9 +142,9 @@ class NotificationRunnerTest extends MediaWikiIntegrationTestCase {
         $bucketMock->expects( $this->once() )->method( 'purgeOld' );
 
         $notificationRunner = new NotificationRunner(
-            PegaNotifyServices::getNotifierStore(),
+            TimedNotifyServices::getNotifierStore(),
             $bucketMock,
-            PegaNotifyServices::getEchoEventCreator(),
+            TimedNotifyServices::getEchoEventCreator(),
             1.0
         );
 
@@ -161,12 +161,12 @@ class NotificationRunnerTest extends MediaWikiIntegrationTestCase {
         ] );
         $notifierMock->method( 'getName' )->willReturn( 'TestingNotifier' );
 
-        $notifierStoreMock = $this->getMockBuilder( NotifierStore::class )->getMock();
+        $notifierStoreMock = $this->getMockBuilder( NotifierStore::class )->disableOriginalConstructor()->getMock();
         $notifierStoreMock->method( 'getNotifiers' )->willReturn( [
             $notifierMock
         ] );
 
-        $pushedNotificationsBucket = PegaNotifyServices::getPushedNotificationBucket();
+        $pushedNotificationsBucket = TimedNotifyServices::getPushedNotificationBucket();
         $pushedNotificationsBucket->setPushed( 'TestingNotifier-testing' );
 
         $echoEventCreatorMock = $this->getMockBuilder( EchoEventCreator::class )->getMock();
@@ -193,7 +193,7 @@ class NotificationRunnerTest extends MediaWikiIntegrationTestCase {
 
         $notifierMock->method( 'getName' )->willReturn( 'TestingNotifier' );
 
-        $notifierStoreMock = $this->getMockBuilder( NotifierStore::class )->getMock();
+        $notifierStoreMock = $this->getMockBuilder( NotifierStore::class )->disableOriginalConstructor()->getMock();
         $notifierStoreMock->method( 'getNotifiers' )->willReturn( [
             $notifierMock
         ] );
@@ -203,7 +203,7 @@ class NotificationRunnerTest extends MediaWikiIntegrationTestCase {
 
         $notificationRunner = new NotificationRunner(
             $notifierStoreMock,
-            PegaNotifyServices::getPushedNotificationBucket(),
+            TimedNotifyServices::getPushedNotificationBucket(),
             $echoEventCreatorMock,
             1.0
         );
@@ -215,7 +215,7 @@ class NotificationRunnerTest extends MediaWikiIntegrationTestCase {
 
         $notificationRunner = new NotificationRunner(
             $notifierStoreMock,
-            PegaNotifyServices::getPushedNotificationBucket(),
+            TimedNotifyServices::getPushedNotificationBucket(),
             $echoEventCreatorMock,
             1.0
         );

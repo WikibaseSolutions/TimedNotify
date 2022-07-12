@@ -1,6 +1,6 @@
 <?php
 
-namespace PegaNotify\Tests\Unit;
+namespace TimedNotify\Tests\Unit;
 
 use ExtensionRegistry;
 use MediaWikiUnitTestCase;
@@ -28,8 +28,8 @@ class ServiceWiringTest extends MediaWikiUnitTestCase {
         $servicesNames = $this->getServicesNames();
 
         foreach ( $servicesNames as $serviceName ) {
-            $this->assertStringStartsWith( 'PegaNotify.', $serviceName,
-                'Please prefix services names with "PegaNotify."' );
+            $this->assertStringStartsWith( 'TimedNotify.', $serviceName,
+                'Please prefix services names with "TimedNotify."' );
         }
     }
 
@@ -40,8 +40,8 @@ class ServiceWiringTest extends MediaWikiUnitTestCase {
      */
     private function getServicesNames(): array {
         $allThings = ExtensionRegistry::getInstance()->getAllThings();
-        $dirName = dirname( $allThings['PegaNotify']['path'] );
+        $dirName = dirname( $allThings['TimedNotify']['path'] );
 
-        return array_keys( require $dirName . '/PegaNotify.wiring.php' );
+        return array_keys( require $dirName . '/TimedNotify.wiring.php' );
     }
 }

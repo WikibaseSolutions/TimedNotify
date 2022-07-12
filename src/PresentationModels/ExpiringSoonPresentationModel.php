@@ -1,6 +1,6 @@
 <?php
 
-namespace PegaNotify\PresentationModels;
+namespace TimedNotify\PresentationModels;
 
 use EchoEventPresentationModel;
 
@@ -21,7 +21,7 @@ abstract class ExpiringSoonPresentationModel extends EchoEventPresentationModel 
      * @inheritDoc
      */
     public function getIconType(): string {
-        return 'peganotify-expiring-soon';
+        return 'timednotify-expiring-soon';
     }
 
     /**
@@ -30,7 +30,7 @@ abstract class ExpiringSoonPresentationModel extends EchoEventPresentationModel 
     public function getPrimaryLink(): array {
         return [
             'url' => $this->event->getTitle()->getFullURL(),
-            'label' => $this->msg( 'peganotify-notification-link-text-expiring-soon' )
+            'label' => $this->msg( 'timednotify-notification-link-text-expiring-soon' )
         ];
     }
 
@@ -41,7 +41,7 @@ abstract class ExpiringSoonPresentationModel extends EchoEventPresentationModel 
         return [
             [
                 'url' => $this->event->getTitle()->getFullURL(),
-                'label' => $this->msg( 'peganotify-notification-link-text-expiring-soon' ),
+                'label' => $this->msg( 'timednotify-notification-link-text-expiring-soon' ),
                 'prioritized' => true
             ]
         ];

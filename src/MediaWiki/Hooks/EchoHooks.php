@@ -1,12 +1,12 @@
 <?php
 
-namespace PegaNotify\MediaWiki\Hooks;
+namespace TimedNotify\MediaWiki\Hooks;
 
-use PegaNotify\Notifiers\Notifier;
-use PegaNotify\PegaNotifyServices;
+use TimedNotify\Notifiers\Notifier;
+use TimedNotify\TimedNotifyServices;
 
 /**
- * Hook handler for Echo hooks implemented by PegaNotify.
+ * Hook handler for Echo hooks implemented by TimedNotify.
  */
 class EchoHooks {
     /**
@@ -22,7 +22,7 @@ class EchoHooks {
         array &$notificationCategories,
         array &$icons
     ): void {
-        foreach ( PegaNotifyServices::getNotifierStore()->getNotifiers() as $notifier ) {
+        foreach ( TimedNotifyServices::getNotifierStore()->getNotifiers() as $notifier ) {
             $notifications[$notifier->getName()] = self::createDefinition( $notifier );
             $icons = array_merge($icons, $notifier->getIcons());
         }

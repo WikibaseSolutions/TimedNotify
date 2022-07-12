@@ -1,12 +1,12 @@
 <?php
 
-namespace PegaNotify\Notifiers;
+namespace TimedNotify\Notifiers;
 
 use EchoEvent;
-use PegaNotify\PresentationModels\ExpiringSoonPageOwnerPresentationModel;
+use TimedNotify\PresentationModels\ExpiringSoonPageOwnerPresentationModel;
 
 class ExpiringSoonPageOwnerNotifier extends ExpiringSoonNotifier {
-    public const NOTIFICATION_NAME = "PegaNotifyExpiringSoonPageOwner";
+    public const NOTIFICATION_NAME = "TimedNotifyExpiringSoonPageOwner";
 
     /**
      * @inheritDoc

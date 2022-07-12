@@ -1,15 +1,15 @@
 <?php
 
-namespace PegaNotify\Notifiers;
+namespace TimedNotify\Notifiers;
 
 use EchoEvent;
 use ExtensionRegistry;
-use PegaNotify\PresentationModels\ExpiringSoonHubAdminPresentationModel;
+use TimedNotify\PresentationModels\ExpiringSoonHubAdminPresentationModel;
 use User;
 use WSS\NamespaceRepository;
 
 class ExpiringSoonHubAdminNotifier extends ExpiringSoonNotifier {
-    public const NOTIFICATION_NAME = "PegaNotifyExpiringSoonHubAdmin";
+    public const NOTIFICATION_NAME = "TimedNotifyExpiringSoonHubAdmin";
 
     /**
      * @inheritDoc

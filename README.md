@@ -1,23 +1,24 @@
-# PegaNotify
+# TimedNotify
 
-Provides a time-based notification system for Pega using Echo.
+Provides a time-based notification system for Echo.
 
 ## Configuration
 
 The following configuration options are available:
 
-* `$wgPegaNotifyRunRate` (default: `0.05`) - determines the run rate of the notifier
-* `$wgPegaNotifyRunDeferred` (default: `true`) - whether to run the
+* `$wgTimedNotifyRunRate` (default: `0.05`) - determines the run rate of the notifier
+* `$wgTimedNotifyRunDeferred` (default: `true`) - whether to run the
   notifications in a deferred update
-* `$wgPegaNotifyPushedNotificationRetentionDays` (default: `60`) - the number
+* `$wgTimedNotifyPushedNotificationRetentionDays` (default: `60`) - the number
   of days to retain pushed notifications
+* `$wgTimedNotifyEnabledNotifiers` - which notifiers to enable
 
-### `$wgPegaNotifyRunRate`
+### `$wgTimedNotifyRunRate`
 
 This configuration parameter determines how often to run the notifications.
 Calculating which notifications to send out and to whom is expensive. The
 notifications are therefore only calculated approximately once every
-`1/$wgPegaNotifyRunRate` requests. Thus, if you set your run rate to `0.01`,
+`1/$wgTimedNotifyRunRate` requests. Thus, if you set your run rate to `0.01`,
 the *probability* of running the notifications is 1 in 100 for every request.
 Setting this to a lower number will increase performance, as the notifications
 have to be calculated less often, but it will decrease the timeliness of the
@@ -28,7 +29,7 @@ greater than for large wiki's.
 
 It should be a number between `0` and `1`. The default value is `0.05` (`1/20`).
 
-### `$wgPegaNotifyRunDeferred`
+### `$wgTimedNotifyRunDeferred`
 
 This configuration parameter determines whether to run the notifications in a
 deferred update. If this parameter is set to `true`, notifications are
@@ -39,11 +40,11 @@ change this.
 
 It should be a boolean. The default value is `true`.
 
-### `$wgPegaNotifyPushedNotificationRetentionDays`
+### `$wgTimedNotifyPushedNotificationRetentionDays`
 
 This configuration parameter specifies the number of days to remember pushed
 events. In order to prevent duplicate notifications for the same event,
-PegaNotify keeps track for which events it has already sent out notifications
+TimedNotify keeps track for which events it has already sent out notifications
 in a database table. To prevent this table from growing extremely large, old
 events are occasionally purged from the table. This configuration options
 specifies the minimum age in days before an event is purged from this table. To
@@ -51,17 +52,34 @@ prevent duplicate notifications, the value should never subceed `14`.
 
 It should be an integer. The default value is `60`.
 
+### `$wgTimedNotifyEnabledNotifiers`
+
+This configuration parameter specifies which notifiers to enable. It should
+be an array of booleans, where the key is the name of the notifier, and the
+value is `true` to enable the notifier, and `false` to disable it. By default,
+all notifiers that are pre-installed are enabled. If you have any custom
+notifiers, you must enable them explicitly.
+
+It should be an array. The default value is:
+
+```
+[
+        "TimedNotifyExpiringSoonHubAdmin" => true,
+        "TimedNotifyExpiringSoonPageOwner" => true
+]
+```
+
 ## Installation
 
-To be able to install PegaNotify, you must be running at least PHP 7.4 and
+To be able to install TimedNotify, you must be running at least PHP 7.4 and
 MediaWiki 1.35. Echo must also be installed.
 
-* Download and place the file(s) in a directory called `PegaNotify` in your
+* Download and place the file(s) in a directory called `TimedNotify` in your
   `extensions/` folder.
 * Add the following code at the bottom of your `LocalSettings.php`:
 
 ```php
-wfLoadExtension( 'PegaNotify' );
+wfLoadExtension( 'TimedNotify' );
 ```
 
 * Run the **update script** which will automatically create the necessary

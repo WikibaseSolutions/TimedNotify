@@ -1,10 +1,10 @@
 <?php
 
-namespace PegaNotify\PresentationModels;
+namespace TimedNotify\PresentationModels;
 
 use MediaWiki\MediaWikiServices;
 use Message;
-use PegaNotify\Notifiers\ExpiringSoonNotifier;
+use TimedNotify\Notifiers\ExpiringSoonNotifier;
 use Title;
 
 class ExpiringSoonHubAdminPresentationModel extends ExpiringSoonPresentationModel {
@@ -18,10 +18,10 @@ class ExpiringSoonHubAdminPresentationModel extends ExpiringSoonPresentationMode
 
 
 
-        return $this->msg( 'peganotify-notification-header-expiring-soon-hub-admin' )
+        return $this->msg( 'timednotify-notification-header-expiring-soon-hub-admin' )
             ->params(
                 $this->event->getTitle()->getFullText(),
-                $this->msg( 'peganotify-expiring-soon-remaining-days' )->numParams(
+                $this->msg( 'timednotify-expiring-soon-remaining-days' )->numParams(
                     $this->event->getExtra()[ExpiringSoonNotifier::TIME_REMAINING_EXTRA_KEY]
                 ),
                 $hubName
@@ -40,10 +40,10 @@ class ExpiringSoonHubAdminPresentationModel extends ExpiringSoonPresentationMode
             $hubName = 'main';
         }
 
-        return $this->msg( 'peganotify-notification-subject-expiring-soon-hub-admin' )
+        return $this->msg( 'timednotify-notification-subject-expiring-soon-hub-admin' )
             ->params(
                 $this->event->getTitle()->getFullText(),
-                $this->msg( 'peganotify-expiring-soon-remaining-days' )->numParams(
+                $this->msg( 'timednotify-expiring-soon-remaining-days' )->numParams(
                     $this->event->getExtra()[ExpiringSoonNotifier::TIME_REMAINING_EXTRA_KEY]
                 ),
                 $hubName

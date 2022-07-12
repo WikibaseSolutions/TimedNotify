@@ -1,20 +1,20 @@
 <?php
 
-namespace PegaNotify;
+namespace TimedNotify;
 
 use MediaWiki\MediaWikiServices;
 use Wikimedia\Services\ServiceContainer;
 
 /**
- * Getter for all PegaNotify services. This class reduces the risk of mistyping
- * a service name and serves as the interface for retrieving services for PegaNotify.
+ * Getter for all TimedNotify services. This class reduces the risk of mistyping
+ * a service name and serves as the interface for retrieving services for TimedNotify.
  *
  * @note Program logic should use dependency injection instead of this class whenever
  * possible.
  *
  * @note This class should only contain static methods.
  */
-final class PegaNotifyServices {
+final class TimedNotifyServices {
     /**
      * Disable the construction of this class by making the constructor private.
      */
@@ -38,6 +38,6 @@ final class PegaNotifyServices {
     }
 
     private static function getService( string $service, ?ServiceContainer $services ) {
-        return ( $services ?: MediaWikiServices::getInstance() )->getService( "PegaNotify.$service" );
+        return ( $services ?: MediaWikiServices::getInstance() )->getService( "TimedNotify.$service" );
     }
 }
