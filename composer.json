@@ -1,7 +1,7 @@
 {
   "name": "wikibase-solutions/timed-notify",
   "type": "mediawiki-extension",
-  "description": "Provides a time-based eventless notification system for Echo.",
+  "description": "Provides a time-based notification system for Echo.",
   "keywords": [ "echo", "mediawiki" ],
   "license": "GPL-2.0-or-later",
   "require-dev": {

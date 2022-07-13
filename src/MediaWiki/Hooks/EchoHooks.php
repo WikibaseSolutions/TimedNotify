@@ -27,6 +27,11 @@ class EchoHooks {
 			$icons = array_merge( $icons, $notifier->getIcons() );
 		}
 
+        $notificationCategories['timednotify-time-based-notification'] = [
+            'priority' => 2,
+            'tooltip' => 'echo-pref-tooltip-timednotify-time-based-notification'
+        ];
+
         $icons['timednotify-clock'] = [
             'path' => 'TimedNotify/modules/icons/clock.svg'
         ];
@@ -40,7 +45,7 @@ class EchoHooks {
 	 */
 	private static function createDefinition( Notifier $notifier ): array {
 		$definition = [
-			'category' => 'system',
+			'category' => 'timednotify-time-based-notification',
 			'section' => 'alert',
 			'group' => 'negative'
 		];
