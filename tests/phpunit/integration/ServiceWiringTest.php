@@ -10,27 +10,24 @@ use MediaWikiIntegrationTestCase;
  * @coversNothing
  */
 class ServiceWiringTest extends MediaWikiIntegrationTestCase {
-    /**
-     * @doesNotPerformAssertions
-     */
-    public function testServicesDoNotFatal() {
-        $services = $this->getServicesNames();
+	public function testServicesDoNotFatal() {
+		$this->expectNotToPerformAssertions();
+		$services = $this->getServicesNames();
 
-        foreach ( $services as $service ) {
-            MediaWikiServices::getInstance()->getService( $service );
-        }
-    }
+		foreach ( $services as $service ) {
+			MediaWikiServices::getInstance()->getService( $service );
+		}
+	}
 
-    /**
-     * Returns the names of all WikiGuard services.
-     *
-     * @return array
-     */
-    private function getServicesNames(): array {
-        $allThings = ExtensionRegistry::getInstance()->getAllThings();
-        $dirName = dirname( $allThings['TimedNotify']['path'] );
+	/**
+	 * Returns the names of all WikiGuard services.
+	 *
+	 * @return array
+	 */
+	private function getServicesNames(): array {
+		$allThings = ExtensionRegistry::getInstance()->getAllThings();
+		$dirName = dirname( $allThings['TimedNotify']['path'] );
 
-        return array_keys( require $dirName . '/TimedNotify.wiring.php' );
-    }
-
+		return array_keys( require $dirName . '/TimedNotify.wiring.php' );
+	}
 }

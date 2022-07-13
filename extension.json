@@ -52,11 +52,8 @@
     "TimedNotifyRunDeferred": {
       "value": true
     },
-    "TimedNotifyEnabledNotifiers": {
-      "value": {
-        "TimedNotifyExpiringSoonHubAdmin": true,
-        "TimedNotifyExpiringSoonPageOwner": true
-      }
+    "TimedNotifyDisabledNotifiers": {
+      "value": []
     }
   },
   "manifest_version": 2,

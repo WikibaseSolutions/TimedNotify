@@ -2,53 +2,66 @@
 
 namespace TimedNotify;
 
-use TimedNotify\Notifiers\ExpiringSoonHubAdminNotifier;
-use TimedNotify\Notifiers\ExpiringSoonPageOwnerNotifier;
-use TimedNotify\Notifiers\Notifier;
+use TimedNotify\MediaWiki\HookRunner;
 
 class NotifierStore {
-    private const NOTIFIERS = [
-        ExpiringSoonHubAdminNotifier::class,
-        ExpiringSoonPageOwnerNotifier::class
-    ];
+	/**
+	 * @var HookRunner The hook runner to use
+	 */
+	private HookRunner $hookRunner;
 
-    /**
-     * @var string[] Array of notifiers names that are enabled
-     */
-    private array $enabledNotifiers;
+	/**
+	 * @var <string bool>[] Array of notifiers names that are disabled
+	 */
+	private array $disabledNotifiers;
 
-    /**
-     * @var Notifier[] Cache of instantiated notifiers
-     */
-    private array $notifierInstancesCache;
+	/**
+	 * @var Notifier[] Cache of instantiated notifiers
+	 */
+	private array $notifierInstancesCache;
 
-    /**
-     * @param bool[] $enabledNotifiers Array of notifiers that are enabled
-     */
-    public function __construct( array $enabledNotifiers ) {
-        $this->enabledNotifiers = $enabledNotifiers;
-    }
+	/**
+	 * @param HookRunner $hookRunner The hook runner to use
+	 * @param <string, bool>[] $disabledNotifiers Array of notifiers that are disabled
+	 */
+	public function __construct( HookRunner $hookRunner, array $disabledNotifiers = [] ) {
+		$this->hookRunner = $hookRunner;
+		$this->disabledNotifiers = $disabledNotifiers;
+	}
 
-    /**
-     * Returns instances of notifiers.
-     *
-     * @return Notifier[]
-     */
-    public function getNotifiers(): array {
-        if ( isset( $this->notifierInstancesCache ) ) {
-            return $this->notifierInstancesCache;
-        }
+	/**
+	 * Returns instances of notifiers.
+	 *
+	 * @return Notifier[]
+	 */
+	public function getNotifiers(): array {
+		if ( isset( $this->notifierInstancesCache ) ) {
+			return $this->notifierInstancesCache;
+		}
 
-        $this->notifierInstancesCache = [];
+		$this->notifierInstancesCache = [];
 
-        foreach ( self::NOTIFIERS as $notifierClass ) {
-            $instance = new $notifierClass();
+		foreach ( $this->getNotifierClasses() as $notifierClass ) {
+			$instance = new $notifierClass();
+			$disabled = $this->disabledNotifiers[$instance->getName()] ?? false;
 
-            if ( isset( $this->enabledNotifiers[$instance->getName()] ) && $this->enabledNotifiers[$instance->getName()] === true ) {
-                $this->notifierInstancesCache[] = $instance;
-            }
-        }
+			if ( !$disabled ) {
+				$this->notifierInstancesCache[] = $instance;
+			}
+		}
 
-        return $this->notifierInstancesCache;
-    }
+		return $this->notifierInstancesCache;
+	}
+
+	/**
+	 * Returns an array of notifier class names.
+	 *
+	 * @return array
+	 */
+	private function getNotifierClasses(): array {
+		$notifierClasses = [];
+		$this->hookRunner->onTimedNotifyGetNotifierClasses( $notifierClasses );
+
+		return $notifierClasses;
+	}
 }

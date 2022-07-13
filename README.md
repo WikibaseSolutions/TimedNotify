@@ -52,22 +52,14 @@ prevent duplicate notifications, the value should never subceed `14`.
 
 It should be an integer. The default value is `60`.
 
-### `$wgTimedNotifyEnabledNotifiers`
+### `$wgTimedNotifyDisabledNotifiers`
 
-This configuration parameter specifies which notifiers to enable. It should
+This configuration parameter specifies which notifiers to disable. It should
 be an array of booleans, where the key is the name of the notifier, and the
-value is `true` to enable the notifier, and `false` to disable it. By default,
-all notifiers that are pre-installed are enabled. If you have any custom
-notifiers, you must enable them explicitly.
+value is `true` to **disable** the notifier. By default, the array is empty
+and all notifiers are enabled.
 
-It should be an array. The default value is:
-
-```
-[
-        "TimedNotifyExpiringSoonHubAdmin" => true,
-        "TimedNotifyExpiringSoonPageOwner" => true
-]
-```
+It should be an array. The default value is `[]`.
 
 ## Installation
 

@@ -1,8 +1,8 @@
 {
-  "name": "wikibase-solutions/pega-notify",
+  "name": "wikibase-solutions/timed-notify",
   "type": "mediawiki-extension",
-  "description": "Provides a custom page notification mechanism for Pega.",
-  "keywords": [ "pega" ],
+  "description": "Provides a time-based notification mechanism for Echo.",
+  "keywords": [ "echo", "mediawiki" ],
   "license": "GPL-2.0-or-later",
   "require": {},
   "require-dev": {
@@ -15,7 +15,8 @@
     "test": [
       "parallel-lint . --exclude vendor --exclude node_modules",
       "phpcs -p -s",
-      "minus-x check ."
+      "minus-x check .",
+      "php ../../tests/phpunit/phpunit.php tests/"
     ],
     "fix": [
       "minus-x fix .",
