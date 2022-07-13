@@ -61,6 +61,39 @@ and all notifiers are enabled.
 
 It should be an array. The default value is `[]`.
 
+## Adding a new notification type
+
+Adding a new time-based notification type is relatively easy, and is quite
+similar to [adding a new notification type to Echo
+directly](https://www.mediawiki.org/wiki/Extension:Echo/Creating_a_new_notification_type).
+
+### Notification definition
+
+Each notifier must be defined in a class. This class must extend the base
+`TimedNotify\Notifier` class, and may implement the following methods:
+
+| **Method**                               | **Description**                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+|------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `getName()`                              | The name of the notifier (should be unique).                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `getPresentationModel()`                 | The class name of the presentation model. This corresponds directly to [presentation models in Echo](https://www.mediawiki.org/wiki/Extension:Echo/Creating_a_new_notification_type#EchoPresentationModel).                                                                                                                                                                                                                                                                                |
+| `getNotifications()`                     | An array of notifications that should be sent. A notification should have the following form: <br/>```['id' => (string) a unique identifier for this notification (will automatically be scoped to the notifier). The notification will only be emitted if a notification with this key has not already been emitted. If this value is omitted, the notification will be emitted unconditionally. (optional), 'data' => (array) additional data to add to the notification. (optional)]``` |
+| `getIcons()`                             | Additional icons to define.                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `static getNotificationUsers(EchoEvent)` | The users that should be notified by the given event.                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `static getFilteredUsers(EchoEvent)`     | The list of users that should not be notified by this event.                                                                                                                                                                                                                                                                                                                                                                                                                               |                                       
+
+### Notification registration
+
+Notification registration happens in the method that corresponds to the
+`TimedNotifyGetNotifierClasses` hook. This hook includes a single variable,
+`&$notifierClasses` and contains a list of classes that extend `Notifier`. You
+must add your new notifiers through this hook. For example:
+
+```php
+public function onTimedNotifyGetNotifierClasses( array &$notifierClasses ): void {
+    $notifierClasses[] = MyCoolNotifier::class;
+}
+```
+
 ## Installation
 
 To be able to install TimedNotify, you must be running at least PHP 7.4 and
