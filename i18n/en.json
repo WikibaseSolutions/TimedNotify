@@ -5,7 +5,7 @@
     ]
   },
   "timednotify-extensionname": "TimedNotify",
-  "timednotify-desc": "Provides a custom notification mechanism for Pega.",
+  "timednotify-desc": "Provides a time-based eventless notification system for Echo.",
   "timednotify-expiring-soon-remaining-days": "$1 {{PLURAL:$1|day|days}}",
   "timednotify-notification-header-expiring-soon-page-owner": "The verified status of <strong>[[$1]]</strong> is scheduled to expire in less than <strong>$2</strong>. You have been identified as the owner of this page. Please visit the page and re-verify it soon.",
   "timednotify-notification-subject-expiring-soon-page-owner": "The verified status of <strong>[[$1]]</strong> on {{SITENAME}} is scheduled to expire in less than <strong>$2</strong>. You have been identified as the owner of this page. Please visit the page and re-verify it soon.",
