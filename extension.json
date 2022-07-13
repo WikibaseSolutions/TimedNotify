@@ -1,8 +1,7 @@
 {
   "name": "TimedNotify",
   "version": "1.0.0",
-  "namemsg": "timednotify-extensionname",
-  "url": "https://wikibase-solutions.com",
+  "url": "https://www.mediawiki.org/wiki/Extension:TimedNotify",
   "type": "other",
   "author": [
     "[https://mediawiki.org/wiki/User:Xxmarijnw Marijn van Wezel] ([https://wikibase-solutions.com Wikibase Solutions])"

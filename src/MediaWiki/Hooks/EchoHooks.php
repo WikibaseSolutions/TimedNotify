@@ -26,6 +26,10 @@ class EchoHooks {
 			$notifications[$notifier->getName()] = self::createDefinition( $notifier );
 			$icons = array_merge( $icons, $notifier->getIcons() );
 		}
+
+        $icons['timednotify-clock'] = [
+            'path' => 'TimedNotify/modules/icons/clock.svg'
+        ];
 	}
 
 	/**
