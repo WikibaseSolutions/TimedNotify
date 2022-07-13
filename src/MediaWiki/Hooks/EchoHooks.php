@@ -27,14 +27,14 @@ class EchoHooks {
 			$icons = array_merge( $icons, $notifier->getIcons() );
 		}
 
-        $notificationCategories['timednotify-time-based-notification'] = [
-            'priority' => 2,
-            'tooltip' => 'echo-pref-tooltip-timednotify-time-based-notification'
-        ];
+		$notificationCategories['timednotify-time-based-notification'] = [
+			'priority' => 2,
+			'tooltip' => 'echo-pref-tooltip-timednotify-time-based-notification'
+		];
 
-        $icons['timednotify-clock'] = [
-            'path' => 'TimedNotify/modules/icons/clock.svg'
-        ];
+		$icons['timednotify-clock'] = [
+			'path' => 'TimedNotify/modules/icons/clock.svg'
+		];
 	}
 
 	/**
@@ -47,7 +47,7 @@ class EchoHooks {
 		$definition = [
 			'category' => 'timednotify-time-based-notification',
 			'section' => 'alert',
-			'group' => 'negative'
+			'group' => 'neutral'
 		];
 
 		$definition['presentation-model'] = $notifier->getPresentationModel();
