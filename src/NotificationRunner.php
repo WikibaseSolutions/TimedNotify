@@ -115,7 +115,12 @@ class NotificationRunner {
 	 * @see NotificationRunner::runDeferred() for a function that always runs the notifications in a deferred request
 	 */
 	public function runOccasionally( bool $deferred = true ): void {
-		// Generate a random value between 0 and 1 inclusive
+		if ( $this->runRate === 0.0 ) {
+			// Make sure that the notifications never run if the run rate is zero
+			return;
+		}
+
+		// Generate a random value between 0 inclusive and 1 inclusive
 		$rand = lcg_value();
 
 		if ( $rand <= $this->runRate ) {

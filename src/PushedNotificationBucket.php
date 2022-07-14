@@ -65,12 +65,14 @@ class PushedNotificationBucket {
 
 	/**
 	 * Purge old records from the pushed notifications table.
-	 * g
+	 *
+	 * @param int|null $purgeOlder Purge records older than the given number of days; leave NULL to use the default
+	 *  specified through $wgTimedNotifyPushedNotificationRetentionDays.
 	 * @return void
 	 */
-	public function purgeOld(): void {
+	public function purgeOld( ?int $purgeOlder = null ): void {
 		// Purge everything before this Unix timestamp
-		$purgeBefore = time() - ( 60 * 60 * 24 * $this->purgeOlder );
+		$purgeBefore = time() - ( 60 * 60 * 24 * ( $purgeOlder ?? $this->purgeOlder ) );
 
 		$this->database->delete(
 			self::PUSHED_NOTIFICATIONS_TABLE,
