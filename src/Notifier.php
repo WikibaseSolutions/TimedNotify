@@ -46,14 +46,14 @@ abstract class Notifier {
 	 */
 	abstract public static function getNotificationUsers( EchoEvent $event ): array;
 
-    /**
-     * Returns the category of this notification.
-     *
-     * @return string
-     */
-    public function getCategory(): string {
-        return 'timednotify-time-based-notification';
-    }
+	/**
+	 * Returns the category of this notification.
+	 *
+	 * @return string
+	 */
+	public function getCategory(): string {
+		return 'timednotify-time-based-notification';
+	}
 
 	/**
 	 * Returns additional icons to define.
