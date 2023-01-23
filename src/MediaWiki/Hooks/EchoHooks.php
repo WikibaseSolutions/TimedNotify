@@ -45,11 +45,11 @@ class EchoHooks {
 	 */
 	private static function createDefinition( Notifier $notifier ): array {
 		$definition = [
-			'category' => 'timednotify-time-based-notification',
 			'section' => 'alert',
 			'group' => 'neutral'
 		];
 
+        $definition['category'] = $notifier->getCategory();
 		$definition['presentation-model'] = $notifier->getPresentationModel();
 		$definition['user-locators'] = [ get_class( $notifier ) . '::getNotificationUsers' ];
 		$definition['user-filters'] = [ get_class( $notifier ) . '::getFilteredUsers' ];
