@@ -2,7 +2,7 @@
 
 namespace TimedNotify;
 
-use IDatabase;
+use Wikimedia\Rdbms\DBConnRef;
 
 /**
  * This class is responsible for the interaction with the pushed notifications table, which is used to
@@ -12,9 +12,9 @@ class PushedNotificationBucket {
 	public const PUSHED_NOTIFICATIONS_TABLE = 'timednotify_pushed_notifications';
 
 	/**
-	 * @var IDatabase The database connection
+	 * @var IDatabase|DBConnRef The database connection
 	 */
-	private IDatabase $database;
+	private $database;
 
 	/**
 	 * @var int After how many days a record is allowed to be purged
@@ -22,10 +22,10 @@ class PushedNotificationBucket {
 	private int $purgeOlder;
 
 	/**
-	 * @param IDatabase $database The database connection to use
+	 * @param IDatabase|DBConnRef $database The database connection to use
 	 * @param int $purgeOlder After how many days a record is allowed to be purged
 	 */
-	public function __construct( IDatabase $database, int $purgeOlder ) {
+	public function __construct( $database, int $purgeOlder ) {
 		$this->database = $database;
 		$this->purgeOlder = $purgeOlder;
 	}
