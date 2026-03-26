@@ -68,13 +68,13 @@ class NotificationRunner {
 				$data = $notification['data'] ?? [];
 				$data['type'] = $notifier->getName();
 
-				// Create and send the notification
-				$this->echoEventCreator->create( $data );
-
 				if ( $notificationId !== null ) {
 					// Make sure we don't push the notification twice by storing that we have sent it
 					$this->pushedNotificationBucket->setPushed( $notificationId );
 				}
+
+				// Create and send the notification
+				$this->echoEventCreator->create( $data );
 			}
 		}
 
